@@ -17,7 +17,7 @@ var currentMaterial = 2
 var lerpPercent = 0.1
 var showPlayer
 var team
-var TIMEOUT = 10000
+var TIMEOUT = 60000
 window.addEventListener('keydown', function (ev) {
   if (ev.keyCode === 'X'.charCodeAt(0)) erase = !erase
 })
@@ -96,20 +96,26 @@ function createGame(options) {
   game.appendTo(container)
   // rescue(game)
   showPlayer = function() {  //showPlayer already defined in global scope
-    var createPlayer = player(game)
+    //var createPlayer = player(game)
     //if (options.team === "team1") viking = createPlayer('viking.png')
     //if (options.team === "team2") viking = createPlayer('skin2.png')
-    viking = createPlayer('skin2.png')  //TO DO: when a new player connects, randomly assign them to team + give them that skin
-    viking.moveTo(options.startingPosition)
-    viking.possess()
-    game.controls.on('data', function(state) {
-      var interacting = false
-      Object.keys(state).map(function(control) {
-        if (state[control] > 0) interacting = true
-      })
-      if (interacting) sendState()
+    emitter.on('team', function(t){
+    team=t
     })
-  }
+    if (!player) {
+      if (team == "redTeam") playerSkin = skin(game.THREE, 'redTeam.png') //does this need to return?
+      if (team =="blueTeam") playerSkin = skin(game.THREE, 'blueTeam.png')
+      viking = createPlayer('skin2.png')  //TO DO: when a new player connects, randomly assign them to team + give them that skin
+      viking.moveTo(options.startingPosition)
+      viking.possess()
+      game.controls.on('data', function(state) {
+        var interacting = false
+        Object.keys(state).map(function(control) {
+          if (state[control] > 0) interacting = true
+        })
+        if (interacting) sendState()
+      })
+    }
 
   highlight(game)
   
@@ -126,7 +132,7 @@ function createGame(options) {
     var size = game.cubeSize
     console.log(team)
     if (game.getBlock(point)==4||game.getBlock(point)==5||game.getBlock(point)==6){
-      if(game.getBlock(point)==5 && team=="team2"){
+      if(game.getBlock(point)==5 && team=="redTeam"){
         console.log("VICTORY")
         emitter.emit('message', {user:'ADMIN', text:'RED TEAM VICTORY'})
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
@@ -136,7 +142,7 @@ function createGame(options) {
         body.appendChild(tit)
         
       }
-      if(game.getBlock(point)==6 && team=="team1"){
+      if(game.getBlock(point)==6 && team=="blueTeam"){
         console.log("VICTORY")
         emitter.emit('message', {user:'ADMIN', text:'BLUE TEAM VICTORY'})
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
@@ -184,7 +190,7 @@ function createGame(options) {
 
 setTimeout( function(){
 for (var i = -1; i <=1;i++){
-  for (var j = -32; j <= 3; j++){
+  for (var j = -32; j <= 10; j++){
     for(var k = -31; k <=31; k++){
       
       var position = {x:i*25, y:j*25, z:k*25}
@@ -194,7 +200,7 @@ for (var i = -1; i <=1;i++){
   }
   
   for (var i = -1; i <=1;i++){
-  for (var j = 4; j <= 20; j++){
+  for (var j = 10; j <= 20; j++){
     for(var k = -31; k <=31; k++){
       
       var position = {x:i*25, y:j*25, z:k*25}
@@ -225,8 +231,13 @@ function lerpMe(position) {
 function updatePlayerPosition(id, update) {
   var pos = update.position
   var player = players[id]
+  emitter.on('team', function(t){
+  team=t
+  })
   if (!player) {
-    var playerSkin = skin(game.THREE, 'skin2.png') //edit for teama.png and teamb.png (shows players moving smoothly)
+    if (team == "redTeam") playerSkin = skin(game.THREE, 'redTeam.png') //does this need to return?
+    if (team =="blueTeam") playerSkin = skin(game.THREE, 'blueTeam.png')
+    //var playerSkin = skin(game.THREE, 'skin2.png') //edit for teama.png and teamb.png (shows players moving smoothly)
     //if (options.team === "team1") playerSkin = skin(game.THREE, 'viking.png')
     //if (options.team === "team2") playerSkin = skin(game.THREE, 'skin2.png')
     var playerMesh = playerSkin.mesh
