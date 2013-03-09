@@ -109,6 +109,7 @@ wss.on('connection', function(ws) {  //runs every time a new play connects, ever
   
   // give the user the initial game settings
   settings.startingPosition = startingPosition[emitter.team]
+  settings.team = emitter.team
   emitter.emit('settings', settings)
   
   // fires when the user tells us they are

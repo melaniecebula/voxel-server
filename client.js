@@ -92,6 +92,8 @@ function createGame(options) {
   // rescue(game)
   showPlayer = function() {  //showPlayer already defined in global scope
     var createPlayer = player(game)
+   // if (options.team === "team1") viking = createPlayer('viking.png')
+   // if (options.team === "team2") viking = createPlayer('viking.png')
     viking = createPlayer('viking.png')   //TO DO: when a new player connects, randomly assign them to team + give them that skin
     viking.moveTo(options.startingPosition)
     viking.possess()
