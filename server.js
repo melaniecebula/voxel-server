@@ -81,6 +81,7 @@ function sendUpdate() {
   clientKeys.map(function(key) {
     var emitter = clients[key]
     update.positions[key] = {
+      team: emitter.team,
       position: emitter.player.position,
       rotation: {
         x: emitter.player.rotation.x,

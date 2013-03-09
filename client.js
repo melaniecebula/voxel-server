@@ -105,9 +105,15 @@ function createGame(options) {
   // rescue(game)
   showPlayer = function() {  //showPlayer already defined in global scope
     var createPlayer = player(game)
+<<<<<<< HEAD
     if (team == "blueTeam") viking = createPlayer('blueSkin.png')
     if (team =="redTeam") viking = createPlayer('redSkin.png')
     else viking = createPlayer('viking.png')
+=======
+    console.log('team!', team)
+    if (team === "blueTeam") viking = createPlayer('blueSkin.png')
+    if (team === "redTeam") viking = createPlayer('redSkin.png')
+>>>>>>> 30c369088626d382ff80a21887d16f808872c754
     //viking = createPlayer('skin2.png')  //TO DO: when a new player connects, randomly assign them to team + give them that skin
     viking.moveTo(options.startingPosition)
     viking.possess()
@@ -241,6 +247,7 @@ function updatePlayerPosition(id, update) {
     if(team=='redTeam') playerSkin=skin(game.THREE, 'redSkin.png')
     else playerSkin=skin(game.THREE, 'viking.png')
     //var playerSkin = skin(game.THREE, 'skin2.png') //edit for teama.png and teamb.png (shows players moving smoothly)
+
     var playerMesh = playerSkin.mesh
     players[id] = playerSkin
     playerMesh.children[0].position.y = 10
