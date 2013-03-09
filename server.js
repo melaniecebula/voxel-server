@@ -23,37 +23,14 @@ var settings = {
     if (-1 <= x && x<=1 && -32 < z && z < 32 && y >= -33 && y <= 100) return 4
     if (-64 < x && x < 64 && -32 < z && z < 32 && y > -33 && y < 0) return 1
     if (-64 < x && x < 64 && -32 < z && z < 32 && y == -33) return 4
-    if (x==63 && z >= -32 && z<32 && y >= 0 && y <=5) return 4
-    if (x==-63 && z >= -32 && z<32 && y >= 0 && y <=5) return 4
-    if (z==32 && x >= -64 && x<64 && y >= 0 && y <=5) return 4
-    if (z==-32 && x >= -64 && x<64 && y >= 0 && y <=5) return 4
+    if (x==63 && z >= -32 && z<32 && y >= -33 && y <=5) return 4
+    if (x==-63 && z >= -32 && z<32 && y >= -33 && y <=5) return 4
+    if (z==32 && x >= -64 && x<64 && y >= -33 && y <=5) return 4
+    if (z==-32 && x >= -64 && x<64 && y >= -33 && y <=5) return 4
 
     return 0
   }
 }
-/*function changeToGrass(){
-  for (var i = -1; i <=1;i++){
-    for (var j = -32; j <= 3; j++){
-      for(var k = -31; k <=31; k++){
-        
-        var position = {x:i*25, y:j*25, z:k*25}
-        game.setBlock(position,1)
-             //else {game.setBlock(position,1)}
-        }
-      }
-    }
-  
-  for (var i = -1; i <=1;i++){
-  for (var j = 4; j <= 20; j++){
-    for(var k = -31; k <=31; k++){
-      
-      var position = {x:i, y:j, z:k}
-      emitter.emit('set', position, 0)
-      }
-    }
-  }
-
-}*/
 var startingPosition = {
   "team1" : {x:500,y:1000,z:500}, 
   "team2" : {x:-500,y:1000,z:500}
@@ -104,9 +81,6 @@ function sendUpdate() {
   broadcast(false, 'update', update)
 }
 
-/*  setTimeout( function(){
-  changeToGrass()
-  }, TIMEOUT)*/
 
 setInterval(sendUpdate, 1000/22) // 45ms
 
@@ -167,7 +141,7 @@ wss.on('connection', function(ws) {  //runs every time a new play connects, ever
   })
   
   emitter.on('set', function(pos, val) {
-    console.log("hello")
+    console.log(pos)
     game.setBlock(pos, val)
     var chunkPos = game.voxels.chunkAtPosition(pos)
     var chunkID = chunkPos.join('|')

@@ -13,7 +13,7 @@ var player = require('voxel-player')
 var emitter, playerID
 var players = {}, lastProcessedSeq = 0
 var localInputs = [], connected = false, erase = true
-var currentMaterial = 1
+var currentMaterial = 2
 var lerpPercent = 0.1
 var showPlayer
 var TIMEOUT=10000
@@ -29,7 +29,7 @@ socket.on('end', function() { connected = false })
 connectToGameServer(socket)
 
 function changeToGrass(){
-  for (var i = -1; i <=1;i++){
+/*  for (var i = -1; i <=1;i++){
     for (var j = -32; j <= 3; j++){
       for(var k = -31; k <=31; k++){
         console.log("bye")
@@ -38,12 +38,11 @@ function changeToGrass(){
              //else {game.setBlock(position,1)}
         }
       }
-    }
+    }*/
   
   for (var i = -1; i <=1;i++){
     for (var j = 4; j <= 20; j++){
       for(var k = -31; k <=31; k++){
-        console.log("bye")
         var position = {x:i, y:j, z:k}
         emitter.emit('set', position, 0)
       }
@@ -125,9 +124,9 @@ function createGame(options) {
       })
       if (interacting) sendState()
     })
-      setTimeout( function(){
+/*      setTimeout( function(){
       changeToGrass()
-      }, TIMEOUT)
+      }, TIMEOUT)*/
   }
 
   highlight(game)
@@ -143,9 +142,8 @@ function createGame(options) {
     if (!point) return
     var erase = !state.firealt && !state.alt
     var size = game.cubeSize
-    changeToGrass()
+    if (game.getBlock(point)==4||game.getBlock(point)==5){return}
     if (erase) {
-      if (game.getBlock(point)==4){return}
       emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
     } else {
       var newBlock = game.checkBlock(point)
