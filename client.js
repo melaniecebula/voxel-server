@@ -15,7 +15,7 @@ var players = {}, lastProcessedSeq = 0
 var localInputs = [], connected = false, erase = true
 var currentMaterial = 1
 var lerpPercent = 0.1
-
+var showPlayer
 window.addEventListener('keydown', function (ev) {
   if (ev.keyCode === 'X'.charCodeAt(0)) erase = !erase
 })
@@ -39,11 +39,21 @@ function connectToGameServer(socket) {
   emitter.on('settings', function(settings) {
     settings.generateChunks = false
     window.game = game = createGame(settings)
+    console.log(settings)
     emitter.emit('created')
+    var numChunks
+    var received = 0
+    emitter.on('chunkCount', function(count) {
+      numChunks = count
+    })
     emitter.on('chunk', function(encoded, chunk) {
       var voxels = crunch.decode(encoded, chunk.length)
       chunk.voxels = voxels
       game.showChunk(chunk)
+      received++
+      if (numChunks) {
+        if (received === numChunks) showPlayer()
+      }
     })
   })
 
@@ -56,9 +66,9 @@ function connectToGameServer(socket) {
 function createGame(options) {
   options.controlsDisabled = false
   window.game = engine(options)
-
+  var viking
   function sendState() {
-    if (!connected) return
+    if (!connected || !viking) return
     var state = {
       position: viking.yaw.position,
       rotation: {
@@ -74,32 +84,33 @@ function createGame(options) {
     name = randomName()
     localStorage.setItem('name', name)
   }
-
-  game.controls.on('data', function(state) {
-    var interacting = false
-    Object.keys(state).map(function(control) {
-      if (state[control] > 0) interacting = true
-    })
-    if (interacting) sendState()
-  })
     
   emitChat(name, emitter)
 
   var container = document.querySelector('#container')
   game.appendTo(container)
   // rescue(game)
-  var createPlayer = player(game)
-  var viking = createPlayer('viking.png')
-  viking.moveTo(options.startingPosition)
-  viking.possess()
-  
+  showPlayer = function() {  //showPlayer already defined in global scope
+    var createPlayer = player(game)
+    viking = createPlayer('viking.png')   //TO DO: when a new player connects, randomly assign them to team + give them that skin
+    viking.moveTo(options.startingPosition)
+    viking.possess()
+    game.controls.on('data', function(state) {
+      var interacting = false
+      Object.keys(state).map(function(control) {
+        if (state[control] > 0) interacting = true
+      })
+      if (interacting) sendState()
+    })
+  }
+
   highlight(game)
   
   blockSelector.on('select', function(material) {
     currentMaterial = +material
   })
   
-  game.on('fire', function (target, state) {
+  game.on('fire', function (target, state) {  //emits set whenever you click: if click on obsidian block, don't do anything if it is(server has obsidian wall hardcoded)
     var vec = game.cameraVector()
     var pos = game.cameraPosition()
     var point = game.raycast(pos, vec, 100)
@@ -140,8 +151,8 @@ function createGame(options) {
 }
 
 function onServerUpdate(update) {
-  var pos = game.controls.target().yaw.position
-  var distance = pos.distanceTo(update.position)
+  //var pos = game.controls.target().yaw.position
+  //var distance = pos.distanceTo(update.position)
   // todo use server sent location
 }
 
@@ -156,7 +167,7 @@ function updatePlayerPosition(id, update) {
   var pos = update.position
   var player = players[id]
   if (!player) {
-    var playerSkin = skin(game.THREE, 'viking.png')
+    var playerSkin = skin(game.THREE, 'viking.png')  //edit for teama.png and teamb.png (shows players moving smoothly)
     var playerMesh = playerSkin.mesh
     players[id] = playerSkin
     playerMesh.children[0].position.y = 10
