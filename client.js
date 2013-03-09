@@ -140,12 +140,19 @@ function createGame(options) {
         console.log("VICTORY")
         emitter.emit('message', {user:'ADMIN', text:'RED TEAM VICTORY'})
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
+        var tit= document.createElement('h1')
+        tit.innerHTML='RED TEAM VICTORY'
+        var body=document.getElementById('win')
+        body.appendChild(tit)
         
       }
       if(game.getBlock(point)==6 && team=="team1"){
         console.log("VICTORY")
         emitter.emit('message', {user:'ADMIN', text:'BLUE TEAM VICTORY'})
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
+        var tit= document.createElement('h1')
+        tit.innerHTML='BLUE TEAM VICTORY'
+        body.appendChild(tit)
       }
       else{
             return}
