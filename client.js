@@ -38,7 +38,6 @@ function changeToGrass(){
       }
     }
   }
-
 }
 
 function connectToGameServer(socket) {
@@ -132,7 +131,15 @@ function createGame(options) {
     if (!point) return
     var erase = !state.firealt && !state.alt
     var size = game.cubeSize
-    if (game.getBlock(point)==4||game.getBlock(point)==5||game.getBlock(point)==6){return}
+    if (game.getBlock(point)==4||game.getBlock(point)==5||game.getBlock(point)==6){  //if obsidian or blueblock or redblock
+      if (game.getBlock == 4)
+        if (player.team == "team2")
+          console.log("team2 wins!")
+      if (game.getBlock == 6)
+        if player.team == "team1")
+          console.log("team1 wins!")
+      return
+    }
     if (erase) {
       emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
     } else {
