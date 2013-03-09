@@ -107,6 +107,7 @@ function createGame(options) {
     var erase = !state.firealt && !state.alt
     var size = game.cubeSize
     if (erase) {
+      if (game.getBlock(point)==4){return}
       emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
     } else {
       var newBlock = game.checkBlock(point)
