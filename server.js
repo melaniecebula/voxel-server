@@ -14,11 +14,10 @@ var TIMEOUT= 10000
 // new clients when they connect
 
 
-
 var settings = {
   //startingPosition: {x: 500, y: 1000, z: 500},                                  //starting positionA and starting positionB
 
-  materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'obsidian', 'blueflag'],   //we need to change the toolbar to only brick
+  materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'obsidian', 'blueflag', 'redflag'],   //we need to change the toolbar to only brick
 
 
 
@@ -37,11 +36,14 @@ var settings = {
     return 0
   }
 }
+
+var game = engine(settings)
+game.setBlock({x:1250, y:1, z:0}, 5) //places blueflag
+game.setBlock({x:-1250, y:1, z:0}, 6)  //places redflag
 var startingPosition = {
   "team1" : {x:500,y:1000,z:500}, 
   "team2" : {x:-500,y:1000,z:500}
 }
-var game = engine(settings)
 var server = http.createServer(ecstatic(path.join(__dirname, 'www')))
 var wss = new WebSocketServer({server: server})
 var clients = {}
