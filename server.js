@@ -87,8 +87,8 @@ wss.on('connection', function(ws) {  //runs every time a new play connects, ever
     rotation: new game.THREE.Vector3(),
     position: new game.THREE.Vector3()
   }
-  assignTeam(emitter)  //assign team  (emitter.team)
-  console.log(id, 'joined')
+  team_assigned = assignTeam(emitter)  //assign team  (emitter.team)
+  console.log(id, 'joined', team_assigned)
   emitter.emit('id', id)
   broadcast(id, 'join', id)
   stream.once('end', leave)
@@ -109,7 +109,7 @@ wss.on('connection', function(ws) {  //runs every time a new play connects, ever
   
   // give the user the initial game settings
   settings.startingPosition = startingPosition[emitter.team]
-  settings.team = emitter.team
+  //settings.team = emitter.team  //player's team is passed into settings COMMENTED OUT
   emitter.emit('settings', settings)
   
   // fires when the user tells us they are
