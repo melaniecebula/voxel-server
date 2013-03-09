@@ -28,29 +28,6 @@ var socket = websocket('ws://' + url.parse(window.location.href).host)
 socket.on('end', function() { connected = false })
 connectToGameServer(socket)
 
-function changeToGrass(){
-  for (var i = -1; i <=1;i++){
-    for (var j = -32; j <= 3; j++){
-      for(var k = -31; k <=31; k++){
-        console.log("bye")
-        var position = {x:i, y:j, z:k}
-        emitter.emit('set', position, 1)
-             //else {game.setBlock(position,1)}
-        }
-      }
-    }
-  
-  for (var i = -1; i <=1;i++){
-    for (var j = 4; j <= 20; j++){
-      for(var k = -31; k <=31; k++){
-        console.log("bye")
-        var position = {x:i, y:j, z:k}
-        emitter.emit('set', position, 0)
-      }
-    }
-  }
-
-}
 function connectToGameServer(socket) {
 
   emitter = duplexEmitter(socket)
@@ -127,9 +104,9 @@ function createGame(options) {
       })
       if (interacting) sendState()
     })
-      setTimeout( function(){
-      changeToGrass()
-      }, TIMEOUT)
+      //setTimeout( function(){
+      //changeToGrass()
+      //}, TIMEOUT)
   }
 
   highlight(game)
@@ -145,7 +122,7 @@ function createGame(options) {
     if (!point) return
     var erase = !state.firealt && !state.alt
     var size = game.cubeSize
-    changeToGrass()
+    //changeToGrass()
     if (erase) {
       if (game.getBlock(point)==4){return}
       emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
