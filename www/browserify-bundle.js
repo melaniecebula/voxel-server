@@ -908,7 +908,7 @@ var player = require('voxel-player')
 var emitter, playerID
 var players = {}, lastProcessedSeq = 0
 var localInputs = [], connected = false, erase = true
-var currentMaterial = 2
+var currentMaterial = 1
 var lerpPercent = 0.1
 var showPlayer
 var team
@@ -1000,10 +1000,9 @@ function createGame(options) {
   // rescue(game)
   showPlayer = function() {  //showPlayer already defined in global scope
     var createPlayer = player(game)
-    if (team == "blueTeam") viking = createPlayer('blueSkin.png')
-    if (team == "redTeam") viking = createPlayer('redSkin.png')
-    else viking = createPlayer('viking.png')
-    //viking = createPlayer('skin2.png')  //TO DO: when a new player connects, randomly assign them to team + give them that skin
+    console.log('team!', team)
+    if (team === "blueTeam") viking = createPlayer('blueSkin.png')
+    if (team === "redTeam") viking = createPlayer('redSkin.png')
     viking.moveTo(options.startingPosition)
     viking.possess()
     game.controls.on('data', function(state) {
@@ -1131,10 +1130,8 @@ function updatePlayerPosition(id, update) {
   var pos = update.position
   var player = players[id]
   if (!player) {
-    //var playerSkin = skin(game.THREE, 'skin2.png') //edit for teama.png and teamb.png (shows players moving smoothly)
-    if (team == "blueTeam") playerSkin = skin(game.THREE, 'blueSkin.png')
-    if (team == "redTeam") playerSkin = skin(game.THREE, 'redSkin.png')
-    else playerSkin = skin(game.THREE, 'viking.png')
+    if (update.team === "blueTeam") playerSkin = skin(game.THREE, 'blueSkin.png')
+    if (update.team === "redTeam") playerSkin = skin(game.THREE, 'redSkin.png')
     var playerMesh = playerSkin.mesh
     players[id] = playerSkin
     playerMesh.children[0].position.y = 10
