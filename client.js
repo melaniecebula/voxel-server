@@ -105,9 +105,9 @@ function createGame(options) {
   // rescue(game)
   showPlayer = function() {  //showPlayer already defined in global scope
     var createPlayer = player(game)
-    //if (options.team === "blueTeam") viking = createPlayer('viking.png')
-    //if (options.team === "redTeam") viking = createPlayer('skin2.png')
-    viking = createPlayer('skin2.png')  //TO DO: when a new player connects, randomly assign them to team + give them that skin
+    if (team == "blueTeam") viking = createPlayer('www/blueSkin.png')
+    else viking = createPlayer('www/redSkin.png')
+    //viking = createPlayer('skin2.png')  //TO DO: when a new player connects, randomly assign them to team + give them that skin
     viking.moveTo(options.startingPosition)
     viking.possess()
     game.controls.on('data', function(state) {
@@ -138,10 +138,10 @@ function createGame(options) {
         console.log("VICTORY")
         emitter.emit('message', {user:'ADMIN', text:'RED TEAM VICTORY'})
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
-/*        var tit= document.createElement('h1')
+        var tit= document.createElement('h1')
         tit.innerHTML='RED TEAM VICTORY'
         var body=document.getElementById('win')
-        body.appendChild(tit)*/
+        body.appendChild(tit)
         // emitter.emit('winner', team)
         
       }
@@ -149,10 +149,10 @@ function createGame(options) {
         console.log("VICTORY")
         emitter.emit('message', {user:'ADMIN', text:'BLUE TEAM VICTORY'})
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
-/*        var tit= document.createElement('h1')
+        var tit= document.createElement('h1')
         tit.innerHTML='BLUE TEAM VICTORY'
         var body=document.getElementById('win')
-        body.appendChild(tit)*/
+        body.appendChild(tit)
         // emitter.emit('winner', team)
       }
       else{
@@ -194,8 +194,8 @@ function createGame(options) {
 
 setTimeout( function(){
 for (var i = -1; i <=1;i++){
-  for (var j = -32; j <= 3; j++){
-    for(var k = -31; k <=31; k++){
+  for (var j = -16; j <= 10; j++){
+    for(var k = -15; k <=15; k++){
       
       var position = {x:i*25, y:j*25, z:k*25}
       emitter.emit('set', position, 1)
@@ -203,9 +203,9 @@ for (var i = -1; i <=1;i++){
     }
   }
   
-  for (var i = -1; i <=1;i++){
-  for (var j = 4; j <= 20; j++){
-    for(var k = -31; k <=31; k++){
+for (var i = -1; i <=1;i++){
+  for (var j = 10; j <= 20; j++){
+    for(var k = -15; k <=15; k++){
       
       var position = {x:i*25, y:j*25, z:k*25}
       emitter.emit('set', position, 0)
@@ -236,9 +236,9 @@ function updatePlayerPosition(id, update) {
   var pos = update.position
   var player = players[id]
   if (!player) {
-    var playerSkin = skin(game.THREE, 'skin2.png') //edit for teama.png and teamb.png (shows players moving smoothly)
-    //if (options.team === "blueTeam") playerSkin = skin(game.THREE, 'viking.png')
-    //if (options.team === "redTeam") playerSkin = skin(game.THREE, 'skin2.png')
+    //var playerSkin = skin(game.THREE, 'skin2.png') //edit for teama.png and teamb.png (shows players moving smoothly)
+    if (team == "blueTeam") playerSkin = skin(game.THREE, 'www/blueSkin.png')
+    else playerSkin = skin(game.THREE, 'www/redSkin.png')
     var playerMesh = playerSkin.mesh
     players[id] = playerSkin
     playerMesh.children[0].position.y = 10

@@ -23,24 +23,28 @@ var settings = {
   controls: { discreteFire: true },
   generate: function(x, y, z) {
     //if (x== 1 && y==0 && z == 0) return 1
-    if (-1 <= x && x<= 1 && -32 < z && z < 32 && y >= -33 && y <= 100) return 4
-    if (-64 < x && x < 64 && -32 < z && z < 32 && y > -33 && y < 0) return 1
-    if (-64 < x && x < 64 && -32 < z && z < 32 && y == -33) return 4
-    if (x==63 && z >= -32 && z<32 && y >= -33 && y <=5) return 4
-    if (x==-63 && z >= -32 && z<32 && y >= -33 && y <=5) return 4
-    if (z==32 && x >= -64 && x<64 && y >= -33 && y <=5) return 4
-    if (z==-32 && x >= -64 && x<64 && y >= -33 && y <=5) return 4
+    if (-1 <= x && x<= 1 && -16 < z && z < 16 && y >= -17 && y <= 20) return 4
+    if (-32 < x && x < 32 && -16 < z && z < 16 && y > -17 && y < 0) return 1
+    if (-32 < x && x < 32 && -16 < z && z < 16 && y == -17) return 4
+    if (x==32 && z >= -32 && z<32 && y >= -17 && y <=5) return 4
+    if (x==-32 && z >= -32 && z<32 && y >= -17 && y <=5) return 4
+    if (z==16 && x >= -32 && x<32 && y >= -17 && y <=5) return 4
+    if (z==-16 && x >= -32 && x<32 && y >= -17 && y <=5) return 4
 
     return 0
   }
 }
 
+function random(n){
+  return Math.floor(Math.random() * n)
+}
+
 var game = engine(settings)
-game.setBlock({x:1250, y:1, z:0}, 5) //places blueflag
-game.setBlock({x:-1250, y:1, z:0}, 6)  //places redflag
+game.setBlock({x: 25 * (random(29) + 2), y:1, z: 25 * (random(31) - 15)}, 5) //places blueflag
+game.setBlock({x: 25 * (-random(29) - 2), y:1, z: 25 * (random(31) - 15)}, 6)  //places redflag
 var startingPosition = {
-  "blueTeam" : {x:500,y:1000,z:500}, 
-  "redTeam" : {x:-500,y:1000,z:500}
+  "blueTeam" : {x:500/2,y:1000/2,z:500/2}, 
+  "redTeam" : {x:-500/2,y:1000/2,z:500/2}
 }
 var server = http.createServer(ecstatic(path.join(__dirname, 'www')))
 var wss = new WebSocketServer({server: server})
