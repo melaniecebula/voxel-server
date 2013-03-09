@@ -106,8 +106,8 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-  font: 14px/1.25 "Helvetica Neue", sans-serif;
-  color: #222;
+  font: 16px*1.618 "Helvetica Neue", sans-serif;
+  color: #000;
   background-color: #fff;
 }
 
