@@ -147,7 +147,7 @@ wss.on('connection', function(ws) {  //runs every time a new play connects, ever
       pos.copy(state.position)
     })
   })
-  
+  emitter.on('winner', function(team){broadcast(null,'wins', team)})
   emitter.on('set', function(pos, val) {
     game.setBlock(pos, val)
     var chunkPos = game.voxels.chunkAtPosition(pos)

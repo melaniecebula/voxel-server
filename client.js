@@ -89,7 +89,15 @@ function createGame(options) {
     name = randomName()
     localStorage.setItem('name', name)
   }
-    
+
+/*  emitter.on('wins', function(team){
+    var tit= document.createElement('h1')
+    if(team==team1){
+    tit.innerHTML='BLUE TEAM VICTORY'}
+    if(team==team2){tit.innerHTML='RED TEAM VICTORY'}
+    var body=document.getElementById('win')
+    body.appendChild(tit)
+  })*/
   emitChat(name, emitter)
 
   var container = document.querySelector('#container')
@@ -134,6 +142,7 @@ function createGame(options) {
         tit.innerHTML='RED TEAM VICTORY'
         var body=document.getElementById('win')
         body.appendChild(tit)
+        // emitter.emit('winner', team)
         
       }
       if(game.getBlock(point)==6 && team=="team1"){
@@ -144,6 +153,7 @@ function createGame(options) {
         tit.innerHTML='BLUE TEAM VICTORY'
         var body=document.getElementById('win')
         body.appendChild(tit)
+        // emitter.emit('winner', team)
       }
       else{
             return}
