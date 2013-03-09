@@ -29,17 +29,6 @@ var socket = websocket('ws://' + url.parse(window.location.href).host)
 socket.on('end', function() { connected = false })
 connectToGameServer(socket)
 
-function changeToGrass(){
-
-  for (var i = -1; i <=1;i++){
-    for (var j = 4; j <= 20; j++){
-      for(var k = -31; k <=31; k++){
-        var position = {x:i, y:j, z:k}
-        emitter.emit('set', position, 0)
-      }
-    }
-  }
-}
 
 function connectToGameServer(socket) {
 
@@ -153,6 +142,7 @@ function createGame(options) {
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
         var tit= document.createElement('h1')
         tit.innerHTML='BLUE TEAM VICTORY'
+        var body=document.getElementById('win')
         body.appendChild(tit)
       }
       else{
@@ -212,6 +202,11 @@ for (var i = -1; i <=1;i++){
       }
     }
   }
+      var tit= document.createElement('h1')
+        tit.innerHTML='THE WALL HAS BEEN LIFTED'
+        var body=document.getElementById('win')
+        body.appendChild(tit)
+        setTimeout(function(){body.removeChild(document.getElementsByTagName("h1")[0])}, 5000)
 }, TIMEOUT)
 
 
