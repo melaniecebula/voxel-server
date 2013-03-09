@@ -17,6 +17,7 @@ var currentMaterial = 2
 var lerpPercent = 0.1
 var showPlayer
 var team
+var TIMEOUT = 10000
 window.addEventListener('keydown', function (ev) {
   if (ev.keyCode === 'X'.charCodeAt(0)) erase = !erase
 })
@@ -180,6 +181,8 @@ function createGame(options) {
     })
   }, 1000)
 
+
+
   emitter.on('leave', function(id) {
     if (!players[id]) return
     game.scene.remove(players[id].mesh)
@@ -188,6 +191,29 @@ function createGame(options) {
   
   return game
 }
+
+setTimeout( function(){
+for (var i = -1; i <=1;i++){
+  for (var j = -32; j <= 3; j++){
+    for(var k = -31; k <=31; k++){
+      
+      var position = {x:i*25, y:j*25, z:k*25}
+      emitter.emit('set', position, 1)
+      }
+    }
+  }
+  
+  for (var i = -1; i <=1;i++){
+  for (var j = 4; j <= 20; j++){
+    for(var k = -31; k <=31; k++){
+      
+      var position = {x:i*25, y:j*25, z:k*25}
+      emitter.emit('set', position, 0)
+      }
+    }
+  }
+}, TIMEOUT)
+
 
 function onServerUpdate(update) {
   //var pos = game.controls.target().yaw.position
