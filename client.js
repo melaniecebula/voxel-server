@@ -142,7 +142,7 @@ function createGame(options) {
     if (!point) return
     var erase = !state.firealt && !state.alt
     var size = game.cubeSize
-    if (game.getBlock(point)==4||game.getBlock(point)==5){return}
+    if (game.getBlock(point)==4||game.getBlock(point)==5||game.getBlock(point)==6){return}
     if (erase) {
       emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
     } else {

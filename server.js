@@ -15,7 +15,7 @@ var TIMEOUT= 10000
 var settings = {
   //startingPosition: {x: 500, y: 1000, z: 500},                                  //starting positionA and starting positionB
 
-  materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'obsidian', 'snow'], 
+  materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'obsidian', 'blueflag', 'redflag'], 
   controlsDisabled: true,
   controls: { discreteFire: true },
   generate: function(x, y, z) {
