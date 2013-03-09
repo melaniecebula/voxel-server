@@ -57,5 +57,24 @@ game.appendTo(container)
 // have the game take over your mouse pointer when you click on it
 game.setupPointerLock(container)
 setTimeout( function(){
-changeToGrass()
+for (var i = -1; i <=1;i++){
+  for (var j = -32; j <= 3; j++){
+    for(var k = -31; k <=31; k++){
+      
+      var position = {x:i*25, y:j*25, z:k*25}
+      { game.setBlock(position,1)}
+           //else {game.setBlock(position,1)}
+      }
+    }
+  }
+  
+  for (var i = -1; i <=1;i++){
+  for (var j = 4; j <= 20; j++){
+    for(var k = -31; k <=31; k++){
+      
+      var position = {x:i*25, y:j*25, z:k*25}
+      { game.setBlock(position,0)}
+      }
+    }
+  }
 }, TIMEOUT)
