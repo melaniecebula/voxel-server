@@ -17,7 +17,7 @@ var currentMaterial = 2
 var lerpPercent = 0.1
 var showPlayer
 var team
-var TIMEOUT = 60000
+var TIMEOUT = 10000
 window.addEventListener('keydown', function (ev) {
   if (ev.keyCode === 'X'.charCodeAt(0)) erase = !erase
 })
@@ -92,9 +92,9 @@ function createGame(options) {
 
 /*  emitter.on('wins', function(team){
     var tit= document.createElement('h1')
-    if(team==team1){
+    if(team==blueTeam){
     tit.innerHTML='BLUE TEAM VICTORY'}
-    if(team==team2){tit.innerHTML='RED TEAM VICTORY'}
+    if(team==redTeam){tit.innerHTML='RED TEAM VICTORY'}
     var body=document.getElementById('win')
     body.appendChild(tit)
   })*/
@@ -104,26 +104,20 @@ function createGame(options) {
   game.appendTo(container)
   // rescue(game)
   showPlayer = function() {  //showPlayer already defined in global scope
-    //var createPlayer = player(game)
-    //if (options.team === "team1") viking = createPlayer('viking.png')
-    //if (options.team === "team2") viking = createPlayer('skin2.png')
-    emitter.on('team', function(t){
-    team=t
-    })
-    if (!player) {
-      if (team == "redTeam") playerSkin = skin(game.THREE, 'redTeam.png') //does this need to return?
-      if (team =="blueTeam") playerSkin = skin(game.THREE, 'blueTeam.png')
-      viking = createPlayer('skin2.png')  //TO DO: when a new player connects, randomly assign them to team + give them that skin
-      viking.moveTo(options.startingPosition)
-      viking.possess()
-      game.controls.on('data', function(state) {
-        var interacting = false
-        Object.keys(state).map(function(control) {
-          if (state[control] > 0) interacting = true
-        })
-        if (interacting) sendState()
+    var createPlayer = player(game)
+    //if (options.team === "blueTeam") viking = createPlayer('viking.png')
+    //if (options.team === "redTeam") viking = createPlayer('skin2.png')
+    viking = createPlayer('skin2.png')  //TO DO: when a new player connects, randomly assign them to team + give them that skin
+    viking.moveTo(options.startingPosition)
+    viking.possess()
+    game.controls.on('data', function(state) {
+      var interacting = false
+      Object.keys(state).map(function(control) {
+        if (state[control] > 0) interacting = true
       })
-    }
+      if (interacting) sendState()
+    })
+  }
 
   highlight(game)
   
@@ -144,10 +138,10 @@ function createGame(options) {
         console.log("VICTORY")
         emitter.emit('message', {user:'ADMIN', text:'RED TEAM VICTORY'})
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
-        var tit= document.createElement('h1')
+/*        var tit= document.createElement('h1')
         tit.innerHTML='RED TEAM VICTORY'
         var body=document.getElementById('win')
-        body.appendChild(tit)
+        body.appendChild(tit)*/
         // emitter.emit('winner', team)
         
       }
@@ -155,10 +149,10 @@ function createGame(options) {
         console.log("VICTORY")
         emitter.emit('message', {user:'ADMIN', text:'BLUE TEAM VICTORY'})
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
-        var tit= document.createElement('h1')
+/*        var tit= document.createElement('h1')
         tit.innerHTML='BLUE TEAM VICTORY'
         var body=document.getElementById('win')
-        body.appendChild(tit)
+        body.appendChild(tit)*/
         // emitter.emit('winner', team)
       }
       else{
@@ -200,7 +194,7 @@ function createGame(options) {
 
 setTimeout( function(){
 for (var i = -1; i <=1;i++){
-  for (var j = -32; j <= 10; j++){
+  for (var j = -32; j <= 3; j++){
     for(var k = -31; k <=31; k++){
       
       var position = {x:i*25, y:j*25, z:k*25}
@@ -210,7 +204,7 @@ for (var i = -1; i <=1;i++){
   }
   
   for (var i = -1; i <=1;i++){
-  for (var j = 10; j <= 20; j++){
+  for (var j = 4; j <= 20; j++){
     for(var k = -31; k <=31; k++){
       
       var position = {x:i*25, y:j*25, z:k*25}
@@ -241,15 +235,10 @@ function lerpMe(position) {
 function updatePlayerPosition(id, update) {
   var pos = update.position
   var player = players[id]
-  emitter.on('team', function(t){
-  team=t
-  })
   if (!player) {
-    if (team == "redTeam") playerSkin = skin(game.THREE, 'redTeam.png') //does this need to return?
-    if (team =="blueTeam") playerSkin = skin(game.THREE, 'blueTeam.png')
-    //var playerSkin = skin(game.THREE, 'skin2.png') //edit for teama.png and teamb.png (shows players moving smoothly)
-    //if (options.team === "team1") playerSkin = skin(game.THREE, 'viking.png')
-    //if (options.team === "team2") playerSkin = skin(game.THREE, 'skin2.png')
+    var playerSkin = skin(game.THREE, 'skin2.png') //edit for teama.png and teamb.png (shows players moving smoothly)
+    //if (options.team === "blueTeam") playerSkin = skin(game.THREE, 'viking.png')
+    //if (options.team === "redTeam") playerSkin = skin(game.THREE, 'skin2.png')
     var playerMesh = playerSkin.mesh
     players[id] = playerSkin
     playerMesh.children[0].position.y = 10
