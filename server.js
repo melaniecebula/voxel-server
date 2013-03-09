@@ -12,16 +12,20 @@ var engine = require('voxel-engine')
 // world on the server and will be sent to all
 // new clients when they connect
 var settings = {
-  startingPosition: {x: 0, y: 1000, z: 0},
-  materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'obsidian', 'snow'],
+  //startingPosition: {x: 0, y: 1000, z: 0},                                  //starting positionA and starting positionB
+
+  materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'obsidian', 'snow'], 
   controlsDisabled: true,
   controls: { discreteFire: true },
-  generate: function flatWorld(x, y, z) {
+  generate: function flatWorld(x, y, z) {   //generate flat world
   	if (y === 0) return 1
     return 0
   }
 }
-
+var startingPosition = {
+  "team1" : {x:0,y:50,z:0}, 
+  "team2" : {x:1000,y:1000,z:1000}
+}
 var game = engine(settings)
 var server = http.createServer(ecstatic(path.join(__dirname, 'www')))
 var wss = new WebSocketServer({server: server})
@@ -29,13 +33,28 @@ var clients = {}
 var chunkCache = {}
 
 // simple version of socket.io's sockets.emit
-function broadcast(id, cmd, arg1, arg2, arg3) {
+function broadcast(id, cmd, arg1, arg2, arg3) {   //loop thru client --> id.   
   Object.keys(clients).map(function(client) {
     if (client === id) return
     clients[client].emit(cmd, arg1, arg2, arg3)
   })
 }
 
+function teamCount(teamName) {
+  var counter = 0
+  Object.keys(clients).map(function(client) {
+    var player = clients[client]
+    if (player.team === teamName) counter++
+  })
+  return counter
+}
+function assignTeam(player) {  //takes in emitter 
+  var teamCount1 = teamCount("team1")
+  var teamCount2 = teamCount("team2")
+  if (teamCount1 === 0) return player.team = "team1"
+  if (teamCount1 >= teamCount2) return player.team = "team2"
+  if (teamCount1 < teamCount2) return player.team = "team1"     
+}
 function sendUpdate() {
   var clientKeys = Object.keys(clients)
   if (clientKeys.length === 0) return
@@ -55,7 +74,7 @@ function sendUpdate() {
 
 setInterval(sendUpdate, 1000/22) // 45ms
 
-wss.on('connection', function(ws) {
+wss.on('connection', function(ws) {  //runs every time a new play connects, everything above this runs only when server sets up
   // turn 'raw' websocket into a stream
   var stream = websocket(ws)
   
@@ -68,7 +87,7 @@ wss.on('connection', function(ws) {
     rotation: new game.THREE.Vector3(),
     position: new game.THREE.Vector3()
   }
-
+  assignTeam(emitter)  //assign team  (emitter.team)
   console.log(id, 'joined')
   emitter.emit('id', id)
   broadcast(id, 'join', id)
@@ -89,6 +108,7 @@ wss.on('connection', function(ws) {
   })
   
   // give the user the initial game settings
+  settings.startingPosition = startingPosition[emitter.team]
   emitter.emit('settings', settings)
   
   // fires when the user tells us they are
@@ -121,6 +141,7 @@ wss.on('connection', function(ws) {
 })
 
 function sendInitialChunks(emitter) {
+  emitter.emit("chunkCount", Object.keys(game.voxels.chunks).length)
   Object.keys(game.voxels.chunks).map(function(chunkID) {
     var chunk = game.voxels.chunks[chunkID]
     var encoded = chunkCache[chunkID]
