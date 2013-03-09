@@ -12,10 +12,16 @@ var TIMEOUT= 10000
 // these settings will be used to create an in-memory
 // world on the server and will be sent to all
 // new clients when they connect
+
+
+
 var settings = {
   //startingPosition: {x: 500, y: 1000, z: 500},                                  //starting positionA and starting positionB
 
-  materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'obsidian', 'snow'], 
+  materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'obsidian', 'blueflag'],   //we need to change the toolbar to only brick
+
+
+
   controlsDisabled: true,
   controls: { discreteFire: true },
   generate: function(x, y, z) {
@@ -168,7 +174,6 @@ wss.on('connection', function(ws) {  //runs every time a new play connects, ever
   })
   
   emitter.on('set', function(pos, val) {
-    console.log("hello")
     game.setBlock(pos, val)
     var chunkPos = game.voxels.chunkAtPosition(pos)
     var chunkID = chunkPos.join('|')
