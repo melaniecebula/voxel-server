@@ -13,7 +13,7 @@ var player = require('voxel-player')
 var emitter, playerID
 var players = {}, lastProcessedSeq = 0
 var localInputs = [], connected = false, erase = true
-var currentMaterial = 2
+var currentMaterial = 1
 var lerpPercent = 0.1
 var showPlayer
 var team
@@ -236,10 +236,10 @@ function updatePlayerPosition(id, update) {
   var pos = update.position
   var player = players[id]
   if (!player) {
+    if(team=='blueTeam') playerSkin=skin(game.THREE, 'blueSkin.png')
+    if(team=='redTeam') playerSkin=skin(game.THREE, 'redSkin.png')
+    else playerSkin=skin(game.THREE, 'viking.png')
     //var playerSkin = skin(game.THREE, 'skin2.png') //edit for teama.png and teamb.png (shows players moving smoothly)
-    if (team == "blueTeam") playerSkin = skin(game.THREE, 'blueSkin.png')
-    if (team == "redTeam") playerSkin = skin(game.THREE, 'redSkin.png')
-    else playerSkin = skin(game.THREE, 'viking.png')
     var playerMesh = playerSkin.mesh
     players[id] = playerSkin
     playerMesh.children[0].position.y = 10

@@ -26,8 +26,8 @@ var settings = {
     if (-1 <= x && x<= 1 && -16 < z && z < 16 && y >= -17 && y <= 20) return 4
     if (-32 < x && x < 32 && -16 < z && z < 16 && y > -17 && y < 0) return 1
     if (-32 < x && x < 32 && -16 < z && z < 16 && y == -17) return 4
-    if (x==32 && z >= -32 && z<32 && y >= -17 && y <=5) return 4
-    if (x==-32 && z >= -32 && z<32 && y >= -17 && y <=5) return 4
+    if (x==32 && z >= -16 && z<16 && y >= -17 && y <=5) return 4
+    if (x==-32 && z >= -16 && z<16 && y >= -17 && y <=5) return 4
     if (z==16 && x >= -32 && x<32 && y >= -17 && y <=5) return 4
     if (z==-16 && x >= -32 && x<32 && y >= -17 && y <=5) return 4
 
@@ -81,6 +81,7 @@ function sendUpdate() {
   clientKeys.map(function(key) {
     var emitter = clients[key]
     update.positions[key] = {
+      team: emitter.team,
       position: emitter.player.position,
       rotation: {
         x: emitter.player.rotation.x,
