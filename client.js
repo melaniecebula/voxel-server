@@ -62,11 +62,11 @@ function connectToGameServer(socket) {
     game.setBlock(pos, val)
   })
 }
-
+var viking //moved viking
 function createGame(options) {
   options.controlsDisabled = false
   window.game = engine(options)
-  var viking
+  //var viking
   function sendState() {
     if (!connected || !viking) return
     var state = {
@@ -92,9 +92,9 @@ function createGame(options) {
   // rescue(game)
   showPlayer = function() {  //showPlayer already defined in global scope
     var createPlayer = player(game)
-   // if (options.team === "team1") viking = createPlayer('viking.png')
-   // if (options.team === "team2") viking = createPlayer('viking.png')
-    viking = createPlayer('viking.png')   //TO DO: when a new player connects, randomly assign them to team + give them that skin
+    //if (options.team === "team1") viking = createPlayer('viking.png')
+    //if (options.team === "team2") viking = createPlayer('skin2.png')
+    viking = createPlayer('skin2.png')  //TO DO: when a new player connects, randomly assign them to team + give them that skin
     viking.moveTo(options.startingPosition)
     viking.possess()
     game.controls.on('data', function(state) {
@@ -158,7 +158,6 @@ function onServerUpdate(update) {
   //var distance = pos.distanceTo(update.position)
   // todo use server sent location
 }
-
 function lerpMe(position) {
   var to = new game.THREE.Vector3()
   to.copy(position)
@@ -170,7 +169,9 @@ function updatePlayerPosition(id, update) {
   var pos = update.position
   var player = players[id]
   if (!player) {
-    var playerSkin = skin(game.THREE, 'viking.png')  //edit for teama.png and teamb.png (shows players moving smoothly)
+    var playerSkin = skin(game.THREE, 'skin2.png') //edit for teama.png and teamb.png (shows players moving smoothly)
+    //if (options.team === "team1") playerSkin = skin(game.THREE, 'viking.png')
+    //if (options.team === "team2") playerSkin = skin(game.THREE, 'skin2.png')
     var playerMesh = playerSkin.mesh
     players[id] = playerSkin
     playerMesh.children[0].position.y = 10
