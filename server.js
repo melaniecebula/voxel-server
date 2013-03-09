@@ -23,7 +23,7 @@ var settings = {
   controls: { discreteFire: true },
   generate: function(x, y, z) {
     //if (x== 1 && y==0 && z == 0) return 1
-    if (-1 <= x && x<=1 && -32 < z && z < 32 && y >= -33 && y <= 100) return 4
+    if (-1 <= x && x<= 1 && -32 < z && z < 32 && y >= -33 && y <= 100) return 4
     if (-64 < x && x < 64 && -32 < z && z < 32 && y > -33 && y < 0) return 1
     if (-64 < x && x < 64 && -32 < z && z < 32 && y == -33) return 4
     if (x==63 && z >= -32 && z<32 && y >= -33 && y <=5) return 4
@@ -39,8 +39,8 @@ var game = engine(settings)
 game.setBlock({x:1250, y:1, z:0}, 5) //places blueflag
 game.setBlock({x:-1250, y:1, z:0}, 6)  //places redflag
 var startingPosition = {
-  "team1" : {x:500,y:1000,z:500}, 
-  "team2" : {x:-500,y:1000,z:500}
+  "blueTeam" : {x:500,y:1000,z:500}, 
+  "redTeam" : {x:-500,y:1000,z:500}
 }
 var server = http.createServer(ecstatic(path.join(__dirname, 'www')))
 var wss = new WebSocketServer({server: server})
@@ -64,11 +64,11 @@ function teamCount(teamName) {
   return counter
 }
 function assignTeam(player) {  //takes in emitter
-  var teamCount1 = teamCount("team1")
-  var teamCount2 = teamCount("team2")
-  if (teamCount1 === 0) return player.team = "team1"
-  if (teamCount1 >= teamCount2) return player.team = "team2"
-  if (teamCount1 < teamCount2) return player.team = "team1"     
+  var teamCountBlue = teamCount("blueTeam")
+  var teamCountRed = teamCount("redTeam")
+  if (teamCountBlue === 0) return player.team = "blueTeam"
+  if (teamCountBlue >= teamCountRed) return player.team = "redTeam"
+  if (teamCountBlue < teamCountRed) return player.team = "blueTeam"     
 }
 function sendUpdate() {
   var clientKeys = Object.keys(clients)
@@ -157,7 +157,7 @@ wss.on('connection', function(ws) {  //runs every time a new play connects, ever
   })
   emitter.on('win', function(id, mat){
     console.log(emitter.team)
-    if (clients[id].team=="team1"){console.log("Blue win")}
+    if (clients[id].team=="blueTeam"){console.log("Blue win")}
     else{console.log("js why")}
   })
   
