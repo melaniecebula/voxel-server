@@ -16,7 +16,7 @@ var localInputs = [], connected = false, erase = true
 var currentMaterial = 2
 var lerpPercent = 0.1
 var showPlayer
-var TIMEOUT=10000
+var team
 window.addEventListener('keydown', function (ev) {
   if (ev.keyCode === 'X'.charCodeAt(0)) erase = !erase
 })
@@ -48,6 +48,9 @@ function connectToGameServer(socket) {
 
   emitter.on('id', function(id) {
     playerID = id
+  })
+  emitter.on('team', function(t){
+    team=t
   })
   emitter.on('settings', function(settings) {
     settings.generateChunks = false
@@ -132,7 +135,22 @@ function createGame(options) {
     if (!point) return
     var erase = !state.firealt && !state.alt
     var size = game.cubeSize
-    if (game.getBlock(point)==4||game.getBlock(point)==5||game.getBlock(point)==6){return}
+    console.log(team)
+    if (game.getBlock(point)==4||game.getBlock(point)==5||game.getBlock(point)==6){
+      if(game.getBlock(point)==5 && team=="team2"){
+        console.log("VICTORY")
+        emitter.emit('message', {user:'ADMIN', text:'RED TEAM VICTORY'})
+        emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
+        
+      }
+      if(game.getBlock(point)==6 && team=="team1"){
+        console.log("VICTORY")
+        emitter.emit('message', {user:'ADMIN', text:'BLUE TEAM VICTORY'})
+        emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
+      }
+      else{
+            return}
+    }
     if (erase) {
       emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
     } else {

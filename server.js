@@ -63,7 +63,7 @@ function teamCount(teamName) {
   })
   return counter
 }
-function assignTeam(player) {  //takes in emitter 
+function assignTeam(player) {  //takes in emitter
   var teamCount1 = teamCount("team1")
   var teamCount2 = teamCount("team2")
   if (teamCount1 === 0) return player.team = "team1"
@@ -106,6 +106,7 @@ wss.on('connection', function(ws) {  //runs every time a new play connects, ever
   team_assigned = assignTeam(emitter)  //assign team  (emitter.team)
   console.log(id, 'joined', team_assigned)
   emitter.emit('id', id)
+  emitter.emit('team', team_assigned)
   broadcast(id, 'join', id)
   stream.once('end', leave)
   stream.once('error', leave)
@@ -153,6 +154,11 @@ wss.on('connection', function(ws) {  //runs every time a new play connects, ever
     var chunkID = chunkPos.join('|')
     if (chunkCache[chunkID]) delete chunkCache[chunkID]
     broadcast(null, 'set', pos, val)
+  })
+  emitter.on('win', function(id, mat){
+    console.log(emitter.team)
+    if (clients[id].team=="team1"){console.log("Blue win")}
+    else{console.log("js why")}
   })
   
 })
