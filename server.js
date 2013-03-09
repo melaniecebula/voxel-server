@@ -7,24 +7,56 @@ var path = require('path')
 var uuid = require('hat')
 var crunch = require('voxel-crunch')
 var engine = require('voxel-engine')
+var TIMEOUT= 10000
 
 // these settings will be used to create an in-memory
 // world on the server and will be sent to all
 // new clients when they connect
 var settings = {
-  //startingPosition: {x: 0, y: 1000, z: 0},                                  //starting positionA and starting positionB
+  //startingPosition: {x: 500, y: 1000, z: 500},                                  //starting positionA and starting positionB
 
   materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'obsidian', 'snow'], 
   controlsDisabled: true,
   controls: { discreteFire: true },
-  generate: function flatWorld(x, y, z) {   //generate flat world
-  	if (y === 0) return 1
+  generate: function(x, y, z) {
+    //if (x== 1 && y==0 && z == 0) return 1
+    if (-1 <= x && x<=1 && -32 < z && z < 32 && y >= -33 && y <= 100) return 4
+    if (-64 < x && x < 64 && -32 < z && z < 32 && y > -33 && y < 0) return 1
+    if (-64 < x && x < 64 && -32 < z && z < 32 && y == -33) return 4
+    if (x==63 && z >= -32 && z<32 && y >= 0 && y <=5) return 4
+    if (x==-63 && z >= -32 && z<32 && y >= 0 && y <=5) return 4
+    if (z==32 && x >= -64 && x<64 && y >= 0 && y <=5) return 4
+    if (z==-32 && x >= -64 && x<64 && y >= 0 && y <=5) return 4
+
     return 0
   }
 }
+/*function changeToGrass(){
+  for (var i = -1; i <=1;i++){
+    for (var j = -32; j <= 3; j++){
+      for(var k = -31; k <=31; k++){
+        
+        var position = {x:i*25, y:j*25, z:k*25}
+        game.setBlock(position,1)
+             //else {game.setBlock(position,1)}
+        }
+      }
+    }
+  
+  for (var i = -1; i <=1;i++){
+  for (var j = 4; j <= 20; j++){
+    for(var k = -31; k <=31; k++){
+      
+      var position = {x:i, y:j, z:k}
+      emitter.emit('set', position, 0)
+      }
+    }
+  }
+
+}*/
 var startingPosition = {
-  "team1" : {x:0,y:50,z:0}, 
-  "team2" : {x:1000,y:1000,z:1000}
+  "team1" : {x:500,y:1000,z:500}, 
+  "team2" : {x:-500,y:1000,z:500}
 }
 var game = engine(settings)
 var server = http.createServer(ecstatic(path.join(__dirname, 'www')))
@@ -71,6 +103,10 @@ function sendUpdate() {
   })
   broadcast(false, 'update', update)
 }
+
+/*  setTimeout( function(){
+  changeToGrass()
+  }, TIMEOUT)*/
 
 setInterval(sendUpdate, 1000/22) // 45ms
 
@@ -131,6 +167,7 @@ wss.on('connection', function(ws) {  //runs every time a new play connects, ever
   })
   
   emitter.on('set', function(pos, val) {
+    console.log("hello")
     game.setBlock(pos, val)
     var chunkPos = game.voxels.chunkAtPosition(pos)
     var chunkID = chunkPos.join('|')
