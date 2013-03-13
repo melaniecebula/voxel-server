@@ -100,7 +100,7 @@ function createGame(options) {
     var body=document.getElementById('win')
     body.appendChild(tit)
   })*/
-  emitChat(name, emitter)
+  emitChat(name, emitter, team)
 
   var container = document.querySelector('#container')
   game.appendTo(container)
@@ -143,7 +143,7 @@ function createGame(options) {
     if (game.getBlock(point)==4||game.getBlock(point)==5||game.getBlock(point)==6){
       if(game.getBlock(point)==5 && team=="redTeam"){
         console.log("VICTORY")
-        emitter.emit('message', {user:'ADMIN', text:'RED TEAM VICTORY'})
+        emitter.emit('message', {user:'ADMIN', text:'RED TEAM VICTORY', tc:0})
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
         var tit= document.createElement('h1')
         tit.innerHTML='RED TEAM VICTORY'
@@ -154,7 +154,7 @@ function createGame(options) {
       }
       if(game.getBlock(point)==6 && team=="blueTeam"){
         console.log("VICTORY")
-        emitter.emit('message', {user:'ADMIN', text:'BLUE TEAM VICTORY'})
+        emitter.emit('message', {user:'ADMIN', text:'BLUE TEAM VICTORY', tc:0})
         emitter.emit('set', {x: point.x, y: point.y, z: point.z}, 0)
         var tit= document.createElement('h1')
         tit.innerHTML='BLUE TEAM VICTORY'
