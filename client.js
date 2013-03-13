@@ -17,7 +17,9 @@ var currentMaterial = 1
 var lerpPercent = 0.1
 var showPlayer
 var team
-var TIMEOUT = 10000
+var TIMEOUT = 120000
+var counter=0
+var lifted=0
 window.addEventListener('keydown', function (ev) {
   if (ev.keyCode === 'X'.charCodeAt(0)) erase = !erase
 })
@@ -124,7 +126,7 @@ function createGame(options) {
   blockSelector.on('select', function(material) {
     currentMaterial = +material
   })
-  
+
   game.on('fire', function (target, state) {  //emits set whenever you click: if click on obsidian block, don't do anything if it is(server has obsidian wall hardcoded)
     var vec = game.cameraVector()
     var pos = game.cameraPosition()
@@ -132,6 +134,12 @@ function createGame(options) {
     if (!point) return
     var erase = !state.firealt && !state.alt
     var size = game.cubeSize
+    counter++
+    var tit= document.createElement('h1')
+    tit.innerHTML=counter
+    var body=document.getElementById('win')
+    body.appendChild(tit)
+    setTimeout(function(){body.removeChild(document.getElementsByTagName("h1")[0])}, 100)
     if (game.getBlock(point)==4||game.getBlock(point)==5||game.getBlock(point)==6){
       if(game.getBlock(point)==5 && team=="redTeam"){
         console.log("VICTORY")
@@ -192,30 +200,34 @@ function createGame(options) {
 }
 
 setTimeout( function(){
-for (var i = -1; i <=1;i++){
-  for (var j = -16; j <= 10; j++){
-    for(var k = -15; k <=15; k++){
-      
-      var position = {x:i*25, y:j*25, z:k*25}
-      emitter.emit('set', position, 1)
+  if(lifted==0){
+  for (var i = -1; i <=1;i++){
+    for (var j = -16; j <= 10; j++){
+      for(var k = -15; k <=15; k++){
+        
+        var position = {x:i*25, y:j*25, z:k*25}
+        emitter.emit('set', position, 1)
+        }
       }
     }
-  }
-  
-for (var i = -1; i <=1;i++){
-  for (var j = 10; j <= 20; j++){
-    for(var k = -15; k <=15; k++){
-      
-      var position = {x:i*25, y:j*25, z:k*25}
-      emitter.emit('set', position, 0)
+    
+  for (var i = -1; i <=1;i++){
+    for (var j = 10; j <= 20; j++){
+      for(var k = -15; k <=15; k++){
+        
+        var position = {x:i*25, y:j*25, z:k*25}
+        emitter.emit('set', position, 0)
+        }
       }
     }
-  }
       var tit= document.createElement('h1')
         tit.innerHTML='THE WALL HAS BEEN LIFTED'
         var body=document.getElementById('win')
         body.appendChild(tit)
-        setTimeout(function(){body.removeChild(document.getElementsByTagName("h1")[0])}, 5000)
+        setTimeout(function(){body.removeChild(document.getElementsByTagName("h1")[0])}, 1000)
+        lifted+=1
+  }
+
 }, TIMEOUT)
 
 
